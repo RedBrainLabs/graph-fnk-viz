@@ -1,4 +1,4 @@
-# graph-vizualizer
+# graph-fnk-viz
 
 Vizualize prismatic graph with rhizome
 
@@ -6,7 +6,7 @@ Vizualize prismatic graph with rhizome
 
 ```clojure
 (require '[plumbing.core :refer [fnk]])
-(require '[graph-vizualizer :as viz])
+(require '[graph-fnk-viz :as viz])
 
 (def graph
   {:a (fnk [b c] (* b c))
@@ -18,7 +18,9 @@ Vizualize prismatic graph with rhizome
               :i (fnk [input-d] (* input-d input-d))
               :j (fnk [input-e] (dec input-e))}})
 
-(viz/save-graph graph "graph.svg")
+(viz/view-graph graph)
+(viz/save-svg graph "graph.svg")
+(viz/save-png graph "graph.png")
 ```
 
 ## License

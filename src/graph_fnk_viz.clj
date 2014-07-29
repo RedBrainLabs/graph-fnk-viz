@@ -1,4 +1,4 @@
-(ns graph-vizualizer
+(ns graph-fnk-viz
   (:require [plumbing.fnk.pfnk :refer [io-schemata]]
             [plumbing.graph :as graph]
             [rhizome.viz :as viz]
@@ -40,15 +40,25 @@
                     (assoc d (conj path k) cleaned-deps))))
               init graph))))
 
+(defn graph-descriptor [graph]
+  (let [al (graph-deps graph)]
+    [(keys al) al
+     :node->descriptor (fn [node] {:label (peek node)})
+     :node->cluster (fn [node] (if (> (count node) 1) (pop node) nil))
+     :cluster->descriptor (fn [cluster] {:label (peek cluster)})
+     :cluster->parent (fn [cluster] (if (> (count cluster) 1) (pop cluster) nil))
+     :options {:dpi 50}]))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Public
 
-(defn save-graph [graph writeable]
-  (let [al (graph-deps graph)
-        svg (viz/graph->svg (keys al) al
-             :node->descriptor (fn [node] {:label (peek node)})
-             :node->cluster (fn [node] (if (> (count node) 1) (pop node) nil))
-             :cluster->descriptor (fn [cluster] {:label (peek cluster)})
-             :cluster->parent (fn [cluster] (if (> (count cluster) 1) (pop cluster) nil))
-             :options {:dpi 50})]
+(defn save-png [graph filename]
+  (let [descriptor (concat (graph-descriptor graph) [:filename filename])]
+    (apply viz/save-graph descriptor)))
+
+(defn save-svg [graph writeable]
+  (let [svg (apply viz/graph->svg (graph-descriptor graph))]
     (spit writeable svg)))
+
+(defn view-graph [graph]
+  (apply viz/view-graph (graph-descriptor graph)))

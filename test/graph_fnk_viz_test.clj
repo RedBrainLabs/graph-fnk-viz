@@ -1,6 +1,6 @@
-(ns graph-vizualizer-test
+(ns graph-fnk-viz-test
   (:require [clojure.test :refer :all]
-            [graph-vizualizer :refer :all]
+            [graph-fnk-viz :refer :all]
 
             [clojure.java.io :as io]
             [plumbing.core :refer [fnk]]))
